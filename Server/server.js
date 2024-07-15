@@ -703,6 +703,14 @@ const Data =[
   }
 ]
 
+server.use(
+    cors({
+      origin: "*", // allow to server to accept request from different origin
+      methods: "GET,POST,PUT",
+      credentials: true, // allow session cookie from browser to pass through
+    })
+  );
+
 server.get('/api', (req, res)=>{
     res.json(Data)
 })
