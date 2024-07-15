@@ -24,6 +24,22 @@ function App() {
     <>
       <Heading />
       <div className="outer-div">{allData}</div>
+      <nav className="navbar">
+        <ul className="pagination pagination-lg">
+          {pageNumbers.map((num, i) => {
+            return (
+              <li
+                key={i}
+                className={`page-item ${cuurPage === num ? "active" : ""}`}
+              >
+                <a href="#" className="page-link">
+                  {num}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
     </>
   );
 }
