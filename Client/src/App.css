@@ -13,3 +13,50 @@
   justify-content: center;
   border-bottom: 2px solid #e0e1dd;
 }
+
+.main-container {
+  height: 91vh;
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: space-evenly;
+}
+
+.Card {
+  height: 380px;
+  width: 280px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  border: 2px solid white;
+  margin-top: 100px;
+  border-radius: 10px;
+}
+.movie-name {
+  margin-bottom: 12px;
+  margin-left: 10px;
+  font-size: 1.2rem;
+}
+
+.bottom-icon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 2800px;
+  height: 100px;
+  border-top: 2px solid white;
+}
+
+.plus-button {
+  border: none;
+  border: 1px solid white;
+  margin-bottom: 30px;
+  padding: 3px;
+  font-size: 2rem;
+  margin-right: 30px;
+  margin-top: 30px;
+}
+
+.outer-div {
+  display: flex;
+}
