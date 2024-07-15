@@ -3,6 +3,7 @@ import axios from "axios";
 import "./App.css";
 import Heading from "./components/heading";
 import Herosection from "./components/Herosection";
+import "bootstrap/dist/css/bootstrap.css";
 
 function App() {
   const [data, setData] = useState([]);
@@ -17,9 +18,13 @@ function App() {
   useEffect(() => {
     axios.get("http://localhost:3000/api").then((res) => setData(res.data));
   }, []);
-  const allData = data.map((ele) => {
+  const allData = totalCards.map((ele) => {
     return <Herosection title={ele.movie} src={ele.image} />;
   });
+
+  function handleCurrPage(id) {
+    setCurrPage(id);
+  }
   return (
     <>
       <Heading />
@@ -32,7 +37,11 @@ function App() {
                 key={i}
                 className={`page-item ${cuurPage === num ? "active" : ""}`}
               >
-                <a href="#" className="page-link">
+                <a
+                  href="#"
+                  className="page-link"
+                  onClick={() => handleCurrPage(num)}
+                >
                   {num}
                 </a>
               </li>
