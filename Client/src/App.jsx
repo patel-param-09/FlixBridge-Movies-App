@@ -5,7 +5,15 @@ import Heading from "./components/heading";
 import Herosection from "./components/Herosection";
 
 function App() {
-  const [data, setData] = useState([{}]);
+  const [data, setData] = useState([]);
+  const [cuurPage, setCurrPage] = useState(1);
+  const cardPerPage = 5;
+  const lastIndex = cuurPage * cardPerPage;
+  const firstIndex = lastIndex - cardPerPage;
+  const totalCards = data.slice(firstIndex, lastIndex);
+  const noOfPages = Math.ceil(data.length / cardPerPage);
+  const pageNumbers = [...Array(noOfPages + 1).keys()].slice(1);
+
   useEffect(() => {
     axios.get("http://localhost:3000/api").then((res) => setData(res.data));
   }, []);
