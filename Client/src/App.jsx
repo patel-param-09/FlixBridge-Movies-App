@@ -17,7 +17,7 @@ function App() {
   const noOfPages = Math.ceil(data.length / cardPerPage);
   const pageNumbers = [...Array(noOfPages + 1).keys()].slice(1);
   const [searchTerm, setSearchTerm] = useState("");
-
+  // this use effect run on the first time when you open the site because atataht time the search field was empty and also runs when the search field was changed
   useEffect(() => {
     if (searchTerm === "") {
       axios.get("http://localhost:3000/api").then((res) => setData(res.data));
@@ -31,7 +31,7 @@ function App() {
       debouncedResults.cancel();
     };
   }, [searchTerm]);
-
+  // main by which card rendered
   const allData = totalCards.map((ele) => {
     return (
       <Herosection
@@ -42,7 +42,7 @@ function App() {
       />
     );
   });
-
+  // Search logic
   function handleChange(e) {
     setCurrPage(1);
     setSearchTerm(e.target.value);
@@ -55,7 +55,7 @@ function App() {
   function handleCurrPage(id) {
     setCurrPage(id);
   }
-
+  // changepage logic
   const allPageNo = pageNumbers.map((num, i) => {
     return (
       <li key={i} className={`page-item ${cuurPage === num ? "active" : ""}`}>
