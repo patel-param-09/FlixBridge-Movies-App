@@ -6,7 +6,7 @@ import Herosection from "./components/Herosection";
 import "bootstrap/dist/css/bootstrap.css";
 import Search from "./components/search";
 import debouce from "lodash.debounce";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function App() {
   const [data, setData] = useState([]);
@@ -18,7 +18,9 @@ function App() {
   const noOfPages = Math.ceil(data.length / cardPerPage);
   const pageNumbers = [...Array(noOfPages + 1).keys()].slice(1);
   const [searchTerm, setSearchTerm] = useState("");
-  console.log(totalCards);
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // this use effect run on the first time when you open the site because atataht time the search field was empty and also runs when the search field was changed
   useEffect(() => {
     if (searchTerm === "") {
@@ -58,6 +60,9 @@ function App() {
   }, []);
 
   function handleCurrPage(id) {
+    if (id > noOfPages) {
+      setCurrPage(1);
+    }
     setCurrPage(id);
   }
   // changepage logic
@@ -65,7 +70,7 @@ function App() {
     return (
       <li key={i} className={`page-item ${cuurPage === num ? "active" : ""}`}>
         <Link
-          to={`/?page=${num}`}
+          to={`/?page=${num > noOfPages ? "" : num}`}
           className="page-link"
           onClick={() => handleCurrPage(num)}
         >
@@ -74,34 +79,36 @@ function App() {
       </li>
     );
   });
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const page = parseInt(searchParams.get("page")) || 1;
+    setCurrPage(page);
+  }, [location.search]);
+
   // carde per page logic
   const perPageCard = [5, 10, 15];
 
-  function handleCard(num) {
-    setCardPerPage(num);
-  }
-
-  const noOfCards = perPageCard.map((card, i) => {
-    return (
-      <li
-        key={i}
-        className={`page-item ${cardPerPage === card ? "active" : ""}`}
-      >
-        <a href="#" className="page-link" onClick={() => handleCard(card)}>
-          {card}
-        </a>
-      </li>
-    );
+  const allCards = perPageCard.map((card, i) => {
+    return <option>{card}</option>;
   });
+
   return (
     <div className="main-div">
       <Heading />
       <Search onChange={debouncedResults} />
       <div className="outer-div">{allData}</div>
-      <nav className="navbar">
+      <div className="select-div">
         <ul className="pagination pagination-md">{allPageNo}</ul>
-        <ul className="pagination pagination-md">{noOfCards}</ul>
-      </nav>
+        <select
+          onChange={(e) => {
+            setCurrPage(1);
+            setCardPerPage(e.target.value);
+          }}
+        >
+          {allCards}
+        </select>
+      </div>
     </div>
   );
 }

@@ -73,8 +73,10 @@
   display: flex;
 }
 
-.navbar {
-  margin-left: 380px;
+.select-div {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .search-input {
@@ -136,4 +138,9 @@ span {
 .button:hover {
   opacity: 1;
   box-shadow: 2px 2px #e0e1dd;
+}
+
+select {
+  padding: 10px;
+  margin-left: 100px;
 }
