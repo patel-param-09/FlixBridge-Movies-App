@@ -24,9 +24,9 @@ function App() {
       axios
         .get("https://dummyapi.online/api/movies")
         .then((res) => setData(res.data));
-    } else if (searchTerm !== "") {
+    } else if (searchTerm.toLowerCase() !== "") {
       const searchMovie = data.filter((movie) => {
-        return movie.movie.includes(searchTerm);
+        return movie.movie.toLowerCase().includes(searchTerm);
       });
       setData(searchMovie);
     }
@@ -36,6 +36,7 @@ function App() {
   }, [searchTerm]);
   // main by which card rendered
   const allData = totalCards.map((ele) => {
+    console.log(ele.movie);
     return (
       <Herosection
         title={ele.movie}
