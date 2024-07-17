@@ -30,7 +30,6 @@
   width: 280px;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
   border: 2px solid white;
   margin-top: 50px;
   border-radius: 10px;

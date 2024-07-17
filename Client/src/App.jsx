@@ -11,13 +11,14 @@ import { Link } from "react-router-dom";
 function App() {
   const [data, setData] = useState([]);
   const [cuurPage, setCurrPage] = useState(1);
-  const cardPerPage = 5;
+  const [cardPerPage, setCardPerPage] = useState(5);
   const lastIndex = cuurPage * cardPerPage;
   const firstIndex = lastIndex - cardPerPage;
   const totalCards = data.slice(firstIndex, lastIndex);
   const noOfPages = Math.ceil(data.length / cardPerPage);
   const pageNumbers = [...Array(noOfPages + 1).keys()].slice(1);
   const [searchTerm, setSearchTerm] = useState("");
+  console.log(totalCards);
   // this use effect run on the first time when you open the site because atataht time the search field was empty and also runs when the search field was changed
   useEffect(() => {
     if (searchTerm === "") {
@@ -36,7 +37,6 @@ function App() {
   }, [searchTerm]);
   // main by which card rendered
   const allData = totalCards.map((ele) => {
-    console.log(ele.movie);
     return (
       <Herosection
         title={ele.movie}
@@ -74,7 +74,25 @@ function App() {
       </li>
     );
   });
+  // carde per page logic
+  const perPageCard = [5, 10, 15];
 
+  function handleCard(num) {
+    setCardPerPage(num);
+  }
+
+  const noOfCards = perPageCard.map((card, i) => {
+    return (
+      <li
+        key={i}
+        className={`page-item ${cardPerPage === card ? "active" : ""}`}
+      >
+        <a href="#" className="page-link" onClick={() => handleCard(card)}>
+          {card}
+        </a>
+      </li>
+    );
+  });
   return (
     <div className="main-div">
       <Heading />
@@ -82,6 +100,7 @@ function App() {
       <div className="outer-div">{allData}</div>
       <nav className="navbar">
         <ul className="pagination pagination-md">{allPageNo}</ul>
+        <ul className="pagination pagination-md">{noOfCards}</ul>
       </nav>
     </div>
   );
