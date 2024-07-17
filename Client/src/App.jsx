@@ -6,6 +6,7 @@ import Herosection from "./components/Herosection";
 import "bootstrap/dist/css/bootstrap.css";
 import Search from "./components/search";
 import debouce from "lodash.debounce";
+import { Link } from "react-router-dom";
 
 function App() {
   const [data, setData] = useState([]);
@@ -41,6 +42,7 @@ function App() {
         src={ele.image}
         rating={ele.rating}
         url={ele.imdb_url}
+        name={ele.movie}
       />
     );
   });
@@ -61,9 +63,13 @@ function App() {
   const allPageNo = pageNumbers.map((num, i) => {
     return (
       <li key={i} className={`page-item ${cuurPage === num ? "active" : ""}`}>
-        <a href="#" className="page-link" onClick={() => handleCurrPage(num)}>
+        <Link
+          to={`/?page=${num}`}
+          className="page-link"
+          onClick={() => handleCurrPage(num)}
+        >
           {num}
-        </a>
+        </Link>
       </li>
     );
   });

@@ -7,7 +7,7 @@ function About() {
   const location = useLocation();
   return (
     <div className="div">
-      <h1 className="name">Name :- {params.movie}</h1>
+      <h1 className="name">Name :- {location.state.name}</h1>
       <h2 className="rating">Rating :- {location.state.rating}</h2>
       <div className="link-div">
         <span>Click This Below Button for more Details ....</span>
