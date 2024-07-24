@@ -18,7 +18,6 @@ function App() {
   const noOfPages = Math.ceil(data.length / cardPerPage);
   const pageNumbers = [...Array(noOfPages + 1).keys()].slice(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate();
   const location = useLocation();
 
   // this use effect run on the first time when you open the site because atataht time the search field was empty and also runs when the search field was changed
