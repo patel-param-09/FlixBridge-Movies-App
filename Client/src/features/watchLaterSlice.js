@@ -9,7 +9,6 @@ const WatchLater = createSlice({
             state.push(action.payload)
         },
         removeWatchLater: (state, action)=>{
-            // console.log(action.payload);
             state.splice(action.payload,1)
         }
     }

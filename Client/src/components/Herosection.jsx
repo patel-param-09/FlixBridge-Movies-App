@@ -14,6 +14,7 @@ function Herosection({ title, src, rating, url, name, data }) {
   function handleClick() {
     const movie = dispatch(addWatchLater(data));
     toast("Movie Added Sucessfully");
+    setStatus(false);
   }
 
   return (
