@@ -7,6 +7,8 @@ import "bootstrap/dist/css/bootstrap.css";
 import Search from "./components/search";
 import debouce from "lodash.debounce";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
 
 function App() {
   const [data, setData] = useState([]);
@@ -19,6 +21,7 @@ function App() {
   const pageNumbers = [...Array(noOfPages + 1).keys()].slice(1);
   const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
+  const watchLater = useSelector((state) => state.name);
 
   // this use effect run on the first time when you open the site because atataht time the search field was empty and also runs when the search field was changed
   useEffect(() => {
@@ -39,6 +42,9 @@ function App() {
 
   // main by which card rendered
   const allData = totalCards.map((ele) => {
+    const iswatchLater = watchLater.some((movie) => movie.id === ele.id);
+    // console.log(watchLaterId, ele.id);
+
     return (
       <Herosection
         title={ele.movie}
@@ -47,6 +53,9 @@ function App() {
         url={ele.imdb_url}
         name={ele.movie}
         data={ele}
+        key={ele.id}
+        id={ele.id}
+        isWatchLater={iswatchLater}
       />
     );
   });
@@ -58,7 +67,7 @@ function App() {
   }
 
   const debouncedResults = useMemo(() => {
-    return debouce(handleChange, 1000);
+    return debouce(handleChange, 300);
   }, []);
 
   function handleCurrPage(id) {
@@ -92,11 +101,12 @@ function App() {
   const perPageCard = [5, 10, 15];
 
   const allCards = perPageCard.map((card, i) => {
-    return <option>{card}</option>;
+    return <option key={i}>{card}</option>;
   });
 
   return (
     <div className="main-div">
+      <ToastContainer />
       <div>
         <Heading />
         <Search onChange={debouncedResults} />

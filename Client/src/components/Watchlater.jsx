@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { removeWatchLater } from "../features/watchLaterSlice";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Watchlater() {
   const dispatch = useDispatch();
@@ -38,6 +40,12 @@ function Watchlater() {
   return (
     <div>
       <div className="Watch-later-div">
+        <Link to={"/"} className="link">
+          <button className="back-button">
+            <FontAwesomeIcon icon={faBackward} className="left Arrow" />
+            Back
+          </button>
+        </Link>
         <h1>All Watch-Later Movies</h1>
       </div>
       <div className="main-container">{card}</div>

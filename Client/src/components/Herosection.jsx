@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addWatchLater } from "../features/watchLaterSlice";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 
-function Herosection({ title, src, rating, url, name, data }) {
+function Herosection({
+  title,
+  src,
+  rating,
+  url,
+  name,
+  data,
+  id,
+  isWatchLater,
+}) {
   const [status, setStatus] = useState(true);
   const dispatch = useDispatch();
 
@@ -17,9 +26,12 @@ function Herosection({ title, src, rating, url, name, data }) {
     setStatus(false);
   }
 
+  useEffect(() => {
+    setStatus(!isWatchLater);
+  }, []);
+
   return (
     <>
-      <ToastContainer />
       <div className="main-container">
         <div className="Card">
           <Link
