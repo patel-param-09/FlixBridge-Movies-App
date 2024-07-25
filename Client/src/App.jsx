@@ -36,6 +36,7 @@ function App() {
       debouncedResults.cancel();
     };
   }, [searchTerm]);
+
   // main by which card rendered
   const allData = totalCards.map((ele) => {
     return (
@@ -45,9 +46,11 @@ function App() {
         rating={ele.rating}
         url={ele.imdb_url}
         name={ele.movie}
+        data={ele}
       />
     );
   });
+
   // Search logic
   function handleChange(e) {
     setCurrPage(1);
@@ -94,19 +97,22 @@ function App() {
 
   return (
     <div className="main-div">
-      <Heading />
-      <Search onChange={debouncedResults} />
-      <div className="outer-div">{allData}</div>
-      <div className="select-div">
-        <ul className="pagination pagination-md">{allPageNo}</ul>
-        <select
-          onChange={(e) => {
-            setCurrPage(1);
-            setCardPerPage(e.target.value);
-          }}
-        >
-          {allCards}
-        </select>
+      <div>
+        <Heading />
+        <Search onChange={debouncedResults} />
+        <div className="outer-div">{allData}</div>
+        <div className="select-div">
+          <ul className="pagination pagination-md">{allPageNo}</ul>
+          <select
+            onChange={(e) => {
+              setCurrPage(1);
+              setCardPerPage(e.target.value);
+            }}
+            className="pages"
+          >
+            {allCards}
+          </select>
+        </div>
       </div>
     </div>
   );

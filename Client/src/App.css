@@ -4,8 +4,8 @@
   font-family: "Nunito Sans", sans-serif;
   margin: 0px;
   padding: 0px;
-  background-color: #0d1b2a;
   color: #e0e1dd;
+  background-color: #0d1b2a;
 }
 
 .heading {
@@ -79,6 +79,28 @@
   justify-content: space-evenly;
 }
 
+.main-search-div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.watch-later-btn {
+  border: 2px solid #e0e1dd;
+  background-color: #778da9;
+  color: black;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-right: 40px;
+  padding: 7px;
+  border-radius: 12px;
+  opacity: 0.5;
+}
+
+.watch-later-btn:hover {
+  opacity: 1;
+}
+
 .search-input {
   width: 300px;
   padding: 15px;
@@ -143,4 +165,30 @@ span {
 select {
   padding: 10px;
   margin-left: 100px;
+  border: 2px solid #e0e1dd;
+  font-weight: 500;
+  border-radius: 7px;
+}
+
+.Watch-later-div {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 4px solid #e0e1dd;
+}
+
+.fa-check {
+  color: white;
+}
+
+.delete-button {
+  border: none;
+  margin-bottom: 30px;
+  padding: 3px;
+  font-size: 2rem;
+  margin-right: 30px;
+  margin-top: 30px;
+  color: red;
 }
