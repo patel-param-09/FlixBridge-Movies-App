@@ -26,9 +26,7 @@ function App() {
   // this use effect run on the first time when you open the site because atataht time the search field was empty and also runs when the search field was changed
   useEffect(() => {
     if (searchTerm === "") {
-      axios
-        .get("https://dummyapi.online/api/movies")
-        .then((res) => setData(res.data));
+      axios.get("http://localhost:3000/api").then((res) => setData(res.data));
     } else if (searchTerm.toLowerCase() !== "") {
       const searchMovie = data.filter((movie) => {
         return movie.movie.toLowerCase().includes(searchTerm);

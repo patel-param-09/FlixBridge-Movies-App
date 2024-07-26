@@ -1,0 +1,16 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model movie {
+    id       Int    @id
+    movie    String
+    rating   Int
+    image    String
+    imdb_url String
+}
