@@ -6,43 +6,45 @@ import Herosection from "./components/Herosection";
 import "bootstrap/dist/css/bootstrap.css";
 import Search from "./components/search";
 import debouce from "lodash.debounce";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useSelector } from "react-redux";
 
 function App() {
   const [data, setData] = useState([]);
   const [cuurPage, setCurrPage] = useState(1);
   const [cardPerPage, setCardPerPage] = useState(5);
-  const lastIndex = cuurPage * cardPerPage;
-  const firstIndex = lastIndex - cardPerPage;
-  const totalCards = data.slice(firstIndex, lastIndex);
-  const noOfPages = Math.ceil(data.length / cardPerPage);
-  const pageNumbers = [...Array(noOfPages + 1).keys()].slice(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [pages, setPages] = useState([]);
   const location = useLocation();
-  const watchLater = useSelector((state) => state.name);
-
-  // this use effect run on the first time when you open the site because atataht time the search field was empty and also runs when the search field was changed
+  // Main Logic
+  // {
   useEffect(() => {
     if (searchTerm === "") {
-      axios.get("http://localhost:3000/api").then((res) => setData(res.data));
-    } else if (searchTerm.toLowerCase() !== "") {
-      const searchMovie = data.filter((movie) => {
-        return movie.movie.toLowerCase().includes(searchTerm);
-      });
-      setData(searchMovie);
+      axios
+        .get(
+          `http://localhost:3000/movies/?page=${cuurPage}&perpage=${cardPerPage}`
+        )
+        .then((res) => {
+          setPages(res.data.page);
+          setPages(res.data.pageNumbers);
+          setData(res.data.movies);
+        });
+    } else {
+      axios
+        .get(
+          `http://localhost:3000/search-movie/?searchElement=${searchTerm}&page=${cuurPage}&perpage=${cardPerPage} `
+        )
+        .then((res) => {
+          setPages(res.data.pageNumbers);
+          setData(res.data.searchMovies);
+        });
     }
-    return () => {
-      debouncedResults.cancel();
-    };
-  }, [searchTerm]);
+  }, [cuurPage, cardPerPage, searchTerm]);
+  // }
 
-  // main by which card rendered
-  const allData = totalCards.map((ele) => {
-    const iswatchLater = watchLater.some((movie) => movie.id === ele.id);
-    // console.log(watchLaterId, ele.id);
-
+  // Main-Logic by which card rendered
+  // {
+  const allData = data.map((ele) => {
     return (
       <Herosection
         title={ele.movie}
@@ -53,12 +55,14 @@ function App() {
         data={ele}
         key={ele.id}
         id={ele.id}
-        isWatchLater={iswatchLater}
+        isWatchLater={ele.isWatchLater}
       />
     );
   });
+  // }
 
   // Search logic
+  // {
   function handleChange(e) {
     setCurrPage(1);
     setSearchTerm(e.target.value);
@@ -69,17 +73,17 @@ function App() {
   }, []);
 
   function handleCurrPage(id) {
-    if (id > noOfPages) {
-      setCurrPage(1);
-    }
     setCurrPage(id);
   }
+  // }
+
   // changepage logic
-  const allPageNo = pageNumbers.map((num, i) => {
+  // {
+  const allPageNo = pages.map((num, i) => {
     return (
       <li key={i} className={`page-item ${cuurPage === num ? "active" : ""}`}>
         <Link
-          to={`/?page=${num > noOfPages ? "" : num}`}
+          to={`/?page=${num}`}
           className="page-link"
           onClick={() => handleCurrPage(num)}
         >
@@ -94,13 +98,16 @@ function App() {
     const page = parseInt(searchParams.get("page")) || 1;
     setCurrPage(page);
   }, [location.search]);
+  // }
 
   // carde per page logic
+  // {
   const perPageCard = [5, 10, 15];
 
   const allCards = perPageCard.map((card, i) => {
     return <option key={i}>{card}</option>;
   });
+  // }
 
   return (
     <div className="main-div">

@@ -8,9 +8,10 @@ datasource db {
 }
 
 model movie {
-    id       Int    @id
-    movie    String
-    rating   Int
-    image    String
-    imdb_url String
+    id           Int      @id
+    movie        String
+    rating       Int
+    image        String
+    imdb_url     String
+    isWatchLater Boolean? @default(false)
 }

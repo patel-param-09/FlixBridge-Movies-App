@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addWatchLater } from "../features/watchLaterSlice";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 function Herosection({
   title,
@@ -18,12 +17,14 @@ function Herosection({
   isWatchLater,
 }) {
   const [status, setStatus] = useState(true);
-  const dispatch = useDispatch();
 
   function handleClick() {
-    const movie = dispatch(addWatchLater(data));
+    axios.post(`http://localhost:3000/add-to-watch-later/${id}`).then((res) => {
+      console.log(res);
+    });
     toast("Movie Added Sucessfully");
     setStatus(false);
+    console.log(status);
   }
 
   useEffect(() => {

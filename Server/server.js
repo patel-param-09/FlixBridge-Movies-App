@@ -1,21 +1,23 @@
-// import cors from 'cors'
+import cors from 'cors'
 import express from 'express'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 const app = express()
+app.use(express.json())
 
 
-// app.use(
-//     cors({
-//       origin: "*", // allow to server to accept request from different origin
-//       methods: "GET,POST,PUT",
-//       credentials: true, // allow session cookie from browser to pass through
-//     })
-//   );
+app.use(
+    cors({
+      origin: "*", 
+      methods: "GET,POST,PUT,PATCH",
+      credentials: true, 
+    })
+  );
 
+                    // Main Api Route
 app.post('/api', async (req, res)=>{
-    const allMovieData = await prisma.movie.createMany({data: [
+    const allMovieData = await prisma.movie.createMany({data:[
       {
         "id": 1,
         "movie": "The Shawshank Redemption",
@@ -724,5 +726,81 @@ app.get("/api", async (req, res)=>{
   const alldata = await prisma.movie.findMany()
   res.json(alldata)
 })
+
+                  // Pagination Route
+app.get(`/movies`, async (req, res) => {
+  const  {page, perpage} = req.query 
+  const count = await prisma.movie.count()
+  const noOfPages = Math.ceil(count / perpage);
+  const lastIndex = page * perpage;
+  const firstIndex = lastIndex - perpage;
+  const pageNumbers = [...Array(noOfPages + 1).keys()].slice(1);
+  const skip = parseInt((page-1) * perpage)
+  const take = Number(perpage)
+  const data = await prisma.movie.findMany({
+    skip:skip,
+    take: take
+  })
+  const totalCards = data.slice(firstIndex, lastIndex);
+  res.send(
+    {
+    movies: data,
+    pageNumbers,
+    page,
+    totalCards
+  })
+})
+
+                  // Search Route
+app.get("/search-movie", async (req, res)=>{
+  const  {searchElement, page, perpage} = req.query 
+  const searchMoviesCount = await prisma.movie.count({
+    where:{
+      movie: {
+       contains: searchElement
+      }
+    }
+  })
+  const noOfPages = Math.ceil(searchMoviesCount / perpage);
+  const pageNumbers = [...Array(noOfPages + 1).keys()].slice(1);
+  const skip = parseInt((page-1) * perpage)
+  const take = Number(perpage)
+  const searchMovies = await prisma.movie.findMany({
+    skip:skip,
+    take: take,
+    where:{
+      movie: {
+       contains: searchElement
+      }
+    }
+  })
+  res.send({searchMovies, page, perpage, pageNumbers})
+})
+
+app.post("/add-to-watch-later/:id", async (req,res)=>{
+  const id =req.params.id
+  const watchLaterMovies = await prisma.movie.update(
+    {
+      where:{id: parseInt(id)},
+      data: {isWatchLater: true}
+    },
+    )
+  res.json(watchLaterMovies)
+})
+
+app.get("/show-watch-later", async (req,res)=>{
+  const allWatchLaterMovie = await prisma.movie.findMany({where: {isWatchLater: true}})
+  res.send(allWatchLaterMovie)
+})
+
+app.patch("/remove-from-watchLater/:id", async (req,res)=>{
+  const id = req.params.id
+  const removeMovie = await prisma.movie.update({
+    where: {id: parseInt(id)}, 
+    data: {isWatchLater: false}
+  })
+  res.json(removeMovie)
+})
+
 
 app.listen(3000)

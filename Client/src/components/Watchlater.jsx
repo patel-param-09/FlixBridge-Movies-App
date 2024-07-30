@@ -1,15 +1,29 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { removeWatchLater } from "../features/watchLaterSlice";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 
 function Watchlater() {
-  const dispatch = useDispatch();
-  const movies = useSelector((state) => {
-    return state.name;
-  });
+  const [movies, setMovies] = useState([]);
+  useEffect(() => {
+    allData();
+  }, []);
+
+  function allData() {
+    axios.get("http://localhost:3000/show-watch-later").then((res) => {
+      setMovies(res.data);
+    });
+  }
+
+  function removeWatchLater(id) {
+    console.log(id);
+    axios
+      .patch(`http://localhost:3000/remove-from-watchLater/${id}`)
+      .then((res) => {
+        allData();
+      });
+  }
   const card = movies.map((movie, id) => {
     return (
       <div className="Card" key={id}>
@@ -28,7 +42,7 @@ function Watchlater() {
           <h3 className="movie-name">{movie.movie}</h3>
           <button
             className="delete-button"
-            onClick={() => dispatch(removeWatchLater(id))}
+            onClick={() => removeWatchLater(movie.id)}
           >
             X
           </button>
