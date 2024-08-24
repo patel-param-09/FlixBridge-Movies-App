@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
-import axios from "axios";
 import "./App.css";
 import Heading from "./components/heading";
 import Herosection from "./components/Herosection";
 import "bootstrap/dist/css/bootstrap.css";
 import Search from "./components/search";
 import debouce from "lodash.debounce";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import fetchClient from "./Services/Instance";
+import { jwtDecode } from "jwt-decode";
 
 function App() {
   const [data, setData] = useState([]);
@@ -15,36 +16,68 @@ function App() {
   const [cardPerPage, setCardPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [pages, setPages] = useState([]);
+  const [watchLater, setWatchLater] = useState([]);
+  const [watchLaterIds, setWatchLaterIds] = useState([]);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const axiosInstance = fetchClient();
   // Main Logic
   // {
   useEffect(() => {
-    if (searchTerm === "") {
-      axios
-        .get(
-          `http://localhost:3000/movies/?page=${cuurPage}&perpage=${cardPerPage}`
-        )
-        .then((res) => {
-          setPages(res.data.page);
-          setPages(res.data.pageNumbers);
-          setData(res.data.movies);
-        });
+    const token = localStorage.getItem("token");
+    if (token != null) {
+      if (searchTerm === "") {
+        axiosInstance
+          .get(`movies/?page=${cuurPage}&perpage=${cardPerPage}`)
+          .then((res) => {
+            setPages(res.data.page);
+            setPages(res.data.pageNumbers);
+            setData(res.data.movies);
+          })
+          .catch((error) => {
+            if (error.response.status === 403) {
+              navigate("/login");
+            }
+          });
+      } else {
+        axiosInstance
+          .get(
+            `search-movie/?searchElement=${searchTerm}&page=${cuurPage}&perpage=${cardPerPage} `
+          )
+          .then((res) => {
+            setPages(res.data.pageNumbers);
+            setData(res.data.searchMovies);
+          });
+      }
     } else {
-      axios
-        .get(
-          `http://localhost:3000/search-movie/?searchElement=${searchTerm}&page=${cuurPage}&perpage=${cardPerPage} `
-        )
-        .then((res) => {
-          setPages(res.data.pageNumbers);
-          setData(res.data.searchMovies);
-        });
+      navigate("/login");
     }
   }, [cuurPage, cardPerPage, searchTerm]);
   // }
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token != null) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.id;
+      axiosInstance.get(`show-watch-later/${userId}`).then((res) => {
+        setWatchLater(res.data);
+      });
+    } else {
+      navigate("/login");
+    }
+  }, [cuurPage]);
+
+  useEffect(() => {
+    const ids = watchLater.map((movie) => movie.movieId);
+    setWatchLaterIds(ids);
+  }, [watchLater]);
+
   // Main-Logic by which card rendered
   // {
   const allData = data.map((ele) => {
+    const isWatchLater = watchLaterIds.includes(ele.id);
     return (
       <Herosection
         title={ele.movie}
@@ -55,11 +88,10 @@ function App() {
         data={ele}
         key={ele.id}
         id={ele.id}
-        isWatchLater={ele.isWatchLater}
+        isWatchLater={isWatchLater}
       />
     );
   });
-  // }
 
   // Search logic
   // {
@@ -72,8 +104,13 @@ function App() {
     return debouce(handleChange, 300);
   }, []);
 
+  const searchParams = new URLSearchParams(location.search);
+
   function handleCurrPage(id) {
     setCurrPage(id);
+    searchParams.set("page", id);
+    console.log(searchParams.toString());
+    navigate(`/?${searchParams.toString()}`);
   }
   // }
 
@@ -96,7 +133,6 @@ function App() {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const page = parseInt(searchParams.get("page")) || 1;
-    setCurrPage(page);
   }, [location.search]);
   // }
 
@@ -121,7 +157,9 @@ function App() {
           <select
             onChange={(e) => {
               setCurrPage(1);
+              searchParams.set("page", 1);
               setCardPerPage(e.target.value);
+              navigate(`/?${searchParams.toString()}`);
             }}
             className="pages"
           >

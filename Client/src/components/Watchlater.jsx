@@ -1,25 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
+import fetchClient from "../Services/Instance";
+import { jwtDecode } from "jwt-decode";
 
 function Watchlater() {
   const [movies, setMovies] = useState([]);
+  const navigate = useNavigate();
+  const axiosInstance = fetchClient();
   useEffect(() => {
     allData();
   }, []);
 
   function allData() {
-    axios.get("http://localhost:3000/show-watch-later").then((res) => {
-      setMovies(res.data);
-    });
+    const token = localStorage.getItem("token");
+    if (token != null) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.id;
+      axiosInstance.get(`show-watch-later/${userId}`).then((res) => {
+        setMovies(res.data);
+      });
+    } else {
+      navigate("/login");
+    }
   }
 
   function removeWatchLater(id) {
-    console.log(id);
-    axios
-      .patch(`http://localhost:3000/remove-from-watchLater/${id}`)
+    const token = localStorage.getItem("token");
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken.id;
+    axiosInstance
+      .delete(`/remove-from-watchLater/${id}/${userId}`)
       .then((res) => {
         allData();
       });
@@ -42,7 +54,7 @@ function Watchlater() {
           <h3 className="movie-name">{movie.movie}</h3>
           <button
             className="delete-button"
-            onClick={() => removeWatchLater(movie.id)}
+            onClick={() => removeWatchLater(movie.movieId)}
           >
             X
           </button>

@@ -1,10 +1,10 @@
 import React from "react";
-import { useParams, useLocation, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import "../App.css";
 
 function About() {
-  const params = useParams();
   const location = useLocation();
+  console.log(location);
   return (
     <div className="div">
       <h1 className="name">Name :- {location.state.name}</h1>

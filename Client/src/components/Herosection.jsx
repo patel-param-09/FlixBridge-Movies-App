@@ -4,32 +4,30 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+import fetchClient from "../Services/Instance";
+import { jwtDecode } from "jwt-decode";
 
-function Herosection({
-  title,
-  src,
-  rating,
-  url,
-  name,
-  data,
-  id,
-  isWatchLater,
-}) {
+function Herosection({ title, src, rating, url, name, id, isWatchLater }) {
   const [status, setStatus] = useState(true);
 
+  const axiosInstance = fetchClient();
   function handleClick() {
-    axios.post(`http://localhost:3000/add-to-watch-later/${id}`).then((res) => {
-      console.log(res);
-    });
-    toast("Movie Added Sucessfully");
-    setStatus(false);
-    console.log(status);
+    const token = localStorage.getItem("token");
+    if (token != null) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.id;
+
+      axiosInstance
+        .post(`add-to-watch-later/${id}/${userId}`)
+        .then((res) => {});
+      toast("Movie Added Sucessfully");
+      setStatus(isWatchLater);
+    }
   }
 
   useEffect(() => {
     setStatus(!isWatchLater);
-  }, []);
+  }, [isWatchLater]);
 
   return (
     <>
