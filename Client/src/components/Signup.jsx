@@ -28,10 +28,18 @@ function Signup() {
   function handleSubmit(e) {
     e.preventDefault();
     setErrors(validation(values));
-    axiosInstance.post("signup", values).then((res) => {
-      alert("Sign-up Done Successfully");
-      Navigate("/login");
-    });
+    axiosInstance
+      .post("signup", values)
+      .then((res) => {
+        alert("Sign-up Done Successfully");
+        Navigate("/login");
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+        if (error.response.data.status === 401) {
+          Navigate("/signup");
+        }
+      });
   }
   return (
     <div className="main-signup-div">

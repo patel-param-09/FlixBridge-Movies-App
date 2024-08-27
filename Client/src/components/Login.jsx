@@ -26,13 +26,18 @@ function Login() {
   function handleSubmit(e) {
     e.preventDefault();
     setErrors(validation(values));
-    axiosInstance.post("login", values).then((res) => {
-      if (res.data) {
-        alert(res.data.message);
-        Navigate("/");
-      }
-      localStorage.setItem("token", res.data.token);
-    });
+    axiosInstance
+      .post("login", values)
+      .then((res) => {
+        if (res.data) {
+          alert(res.data.message);
+          Navigate("/");
+        }
+        localStorage.setItem("token", res.data.token);
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
   }
   return (
     <div className="main-login-div">

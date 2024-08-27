@@ -109,7 +109,6 @@ function App() {
   function handleCurrPage(id) {
     setCurrPage(id);
     searchParams.set("page", id);
-    console.log(searchParams.toString());
     navigate(`/?${searchParams.toString()}`);
   }
   // }
