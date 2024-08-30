@@ -710,7 +710,6 @@ const StoreDataroute = async (req, res)=>{
       message: "All Movies Added Successfully",
       allMovieData: allMovieData
     });
-    res.json(allMovieData)
 }
 
 export default StoreDataroute
