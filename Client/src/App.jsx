@@ -140,7 +140,11 @@ function App() {
   const perPageCard = [5, 10, 15];
 
   const allCards = perPageCard.map((card, i) => {
-    return <option key={i}>{card}</option>;
+    return (
+      <option className="per-page-card" key={i}>
+        {card}
+      </option>
+    );
   });
   // }
 
