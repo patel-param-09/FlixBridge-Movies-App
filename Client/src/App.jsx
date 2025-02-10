@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import Search from "./components/search";
 import debouce from "lodash.debounce";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { Bounce, ToastContainer } from "react-toastify";
 import fetchClient from "./Services/Instance";
 import { jwtDecode } from "jwt-decode";
 
@@ -150,7 +150,19 @@ function App() {
 
   return (
     <div className="main-div">
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Bounce}
+      />
       <div>
         <Heading />
         <Search onChange={debouncedResults} />

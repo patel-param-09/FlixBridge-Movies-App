@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,7 +20,17 @@ function Herosection({ title, src, rating, url, name, id, isWatchLater }) {
       axiosInstance
         .post(`add-to-watch-later/${id}/${userId}`)
         .then((res) => {});
-      toast("Movie Added Sucessfully");
+      toast.success("Movie Added Sucessfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
       setStatus(isWatchLater);
     }
   }
