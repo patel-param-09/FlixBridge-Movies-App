@@ -26,15 +26,17 @@ function Watchlater() {
     }
   }
 
-  function removeWatchLater(id) {
+  function removeWatchLater(id, movie) {
     const token = localStorage.getItem("token");
     const decodedToken = jwtDecode(token);
     const userId = decodedToken.id;
-    axiosInstance
-      .delete(`/remove-from-watchLater/${id}/${userId}`)
-      .then((res) => {
-        allData();
-      });
+    if (!confirm(`Are you sure you want to delete '${movie}'`) === false) {
+      axiosInstance
+        .delete(`/remove-from-watchLater/${id}/${userId}`)
+        .then((res) => {
+          allData();
+        });
+    }
   }
   const card = movies.map((movie, id) => {
     return (
@@ -54,7 +56,7 @@ function Watchlater() {
           <h3 className="movie-name">{movie.movie}</h3>
           <button
             className="delete-button"
-            onClick={() => removeWatchLater(movie.movieId)}
+            onClick={() => removeWatchLater(movie.movieId, movie.movie)}
           >
             X
           </button>
