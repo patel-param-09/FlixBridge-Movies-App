@@ -22,10 +22,17 @@ const LoginRoute = async (req, res)=>{
         message: "All Fields Are Required"
       }); 
     }else{
-
         const userDetail = await prisma.user.findFirst({where:{email:email}})
+
+        if (!userDetail) {
+          return res.status(404).send({
+            status: 404,
+            message: "User Not Found. Please register first.",
+          })
+        }
+
         const userPassword = userDetail.password
-        const userId = userDetail.id
+        const userId = userDetail.id      
 
         const login = await bcrypt.compare(password,userPassword)
 

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import validation from "./LoginValidation";
 import { useNavigate } from "react-router-dom";
 import fetchClient from "../Services/Instance";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
   const Navigate = useNavigate();
@@ -30,17 +32,51 @@ function Login() {
       .post("login", values)
       .then((res) => {
         if (res.data) {
-          alert(res.data.message);
-          Navigate("/");
+          localStorage.setItem("token", res.data.token);
+          // Toast Msg
+          toast.success(res.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+          // for show toast msg to the user
+          setTimeout(() => {
+            Navigate("/");
+          }, 1500);
         }
-        localStorage.setItem("token", res.data.token);
       })
       .catch((error) => {
-        alert(error.response.data.message);
+        toast.error(error.response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       });
   }
   return (
     <div className="main-login-div">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <div className="inner-div">
         <form action="" onSubmit={handleSubmit}>
           <h1 className="heading">Login</h1>

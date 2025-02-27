@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import validation from "./SignupValidation";
 import fetchClient from "../Services/Instance";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Signup() {
   const Navigate = useNavigate();
@@ -31,11 +33,31 @@ function Signup() {
     axiosInstance
       .post("signup", values)
       .then((res) => {
-        alert("Sign-up Done Successfully");
-        Navigate("/login");
+        toast.success(res.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        setTimeout(() => {
+          Navigate("/login");
+        }, 1500);
       })
       .catch((error) => {
-        alert(error.response.data.message);
+        toast.error(error.response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
         if (error.response.data.status === 401) {
           Navigate("/signup");
         }
@@ -43,6 +65,18 @@ function Signup() {
   }
   return (
     <div className="main-signup-div">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <div className="inner-signup-div">
         <form action="" onSubmit={handleSubmit}>
           <h1 className="heading">Sign-Up</h1>
