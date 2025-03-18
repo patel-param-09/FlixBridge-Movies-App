@@ -387,3 +387,21 @@ form {
 .per-page-card {
   color: black;
 }
+
+.back-btn {
+  color: white;
+  background: transparent;
+  border: 2px solid #e0e1dd;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-left: 20px;
+  opacity: 0.6;
+}
+
+.back-btn:hover {
+  opacity: 1;
+}
