@@ -18,6 +18,7 @@ function App() {
   const [pages, setPages] = useState([]);
   const [watchLater, setWatchLater] = useState([]);
   const [watchLaterIds, setWatchLaterIds] = useState([]);
+  const [limit, setLimit] = useState(5);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -78,10 +79,11 @@ function App() {
   // {
   const allData = data.map((ele) => {
     const isWatchLater = watchLaterIds.includes(ele.id);
+    const name = ele.movie.split(":").join("");
     return (
       <Herosection
         title={ele.movie}
-        src={ele.image}
+        src={`http://localhost:3000/images/${name}.jpeg`}
         rating={ele.rating}
         url={ele.imdb_url}
         name={ele.movie}
@@ -89,6 +91,7 @@ function App() {
         key={ele.id}
         id={ele.id}
         isWatchLater={isWatchLater}
+        limit={limit}
       />
     );
   });
@@ -141,7 +144,7 @@ function App() {
 
   const allCards = perPageCard.map((card, i) => {
     return (
-      <option className="per-page-card" key={i}>
+      <option className={`per-page-card`} key={i} value={card}>
         {card}
       </option>
     );
@@ -152,7 +155,7 @@ function App() {
     <div className="main-div">
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick={false}
@@ -174,6 +177,7 @@ function App() {
               setCurrPage(1);
               searchParams.set("page", 1);
               setCardPerPage(e.target.value);
+              setLimit(e.target.value);
               navigate(`/?${searchParams.toString()}`);
             }}
             className="pages"

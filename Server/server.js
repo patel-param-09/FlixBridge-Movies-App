@@ -10,9 +10,15 @@ import RemoveWatchLaterRoute from './controllers/RemoveWatchLater.js'
 import signupRoute from './controllers/Signup.js'
 import LoginRoute from './controllers/Login.js'
 import StoreDataroute from './controllers/AllData.js'
+import path from 'path'
 
 const app = express()
 app.use(express.json())
+
+const __dirname = path.resolve();
+
+const img = app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
+
 
 app.use(
     cors({

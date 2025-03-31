@@ -39,6 +39,7 @@ function Watchlater() {
     }
   }
   const card = movies.map((movie, id) => {
+    const name = movie.movie.split(":").join("");
     return (
       <div className="Card" key={id}>
         <Link
@@ -50,7 +51,7 @@ function Watchlater() {
             url: movie.imdb_url,
           }}
         >
-          <img src={movie.image} alt="" />
+          <img src={`http://localhost:3000/images/${name}.jpeg`} alt="" />
         </Link>
         <div className="bottom-icon">
           <h3 className="movie-name">{movie.movie}</h3>

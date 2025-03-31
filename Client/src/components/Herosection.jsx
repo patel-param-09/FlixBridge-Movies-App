@@ -7,7 +7,16 @@ import "react-toastify/dist/ReactToastify.css";
 import fetchClient from "../Services/Instance";
 import { jwtDecode } from "jwt-decode";
 
-function Herosection({ title, src, rating, url, name, id, isWatchLater }) {
+function Herosection({
+  title,
+  src,
+  rating,
+  url,
+  name,
+  id,
+  isWatchLater,
+  limit,
+}) {
   const [status, setStatus] = useState(true);
 
   const axiosInstance = fetchClient();
